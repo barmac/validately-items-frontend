@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { backendUri } from '../config/config';
+import AddItem from './AddItem';
 import Item from './Item';
 import SingleItem from './SingleItem';
 
@@ -17,12 +18,14 @@ export default class ItemsList extends React.Component<any, ItemsListState> {
     super(props);
     this.state = defaultState;
     this.renderItems = this.renderItems.bind(this);
+    this.addItem = this.addItem.bind(this);
   }
 
   public render() {
     return (
       <div>
         {this.renderItems()}
+        <AddItem onItemAdded={this.addItem} />
       </div>
     );
   }
@@ -36,5 +39,18 @@ export default class ItemsList extends React.Component<any, ItemsListState> {
 
   private renderItems() {
     return this.state.items.map((item: Item, index: number) => <SingleItem key={index} item={item} />)
+  }
+
+  private addItem(name: string): void {
+    const options: RequestInit  = {
+      body: JSON.stringify({ name }),
+      headers: new Headers({ 'Content-Type': 'application/json' }),
+      method: 'POST',
+    };
+
+    window.fetch(backendUri + '/items', options)
+      .then((res: Response) => res.json())
+      .then((item: Item) => this.setState({ items: [...this.state.items, item] }))
+      .catch(console.error);      
   }
 }
