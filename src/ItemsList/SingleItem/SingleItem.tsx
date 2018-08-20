@@ -18,6 +18,7 @@ interface SingleItemState {
 export class SingleItem extends React.Component<SingleItemProps, SingleItemState> {
   constructor(props: SingleItemProps) {
     super(props);
+    this.handleBlur = this.handleBlur.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
     this.setName = this.setName.bind(this);
     this.editName = this.editName.bind(this);
@@ -34,7 +35,7 @@ export class SingleItem extends React.Component<SingleItemProps, SingleItemState
       <div className='single-item'>
         {
           this.state.isEdited ?
-          <input onKeyPress={this.handleKeyPress} onChange={this.setName} value={this.state.name} /> :
+          <input onBlur={this.handleBlur} onKeyPress={this.handleKeyPress} onChange={this.setName} value={this.state.name} /> :
           <div onClick={this.editName}>
             {this.props.item.name}
           </div>
@@ -50,6 +51,10 @@ export class SingleItem extends React.Component<SingleItemProps, SingleItemState
         </div>
       </div>
     );
+  }
+
+  private handleBlur(): void {
+    this.setState({ isEdited: false });
   }
 
   private handleKeyPress(event: any): void {
