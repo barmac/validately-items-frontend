@@ -33,6 +33,7 @@ export class SingleItem extends React.Component<SingleItemProps, SingleItemState
   public render() {
     return (
       <div className='single-item'>
+        <div>
         {
           this.state.isEdited ?
           <input onBlur={this.handleBlur} onKeyPress={this.handleKeyPress} onChange={this.setName} value={this.state.name} /> :
@@ -40,6 +41,7 @@ export class SingleItem extends React.Component<SingleItemProps, SingleItemState
             {this.props.item.name}
           </div>
         }
+        </div>
         <div>
           {this.props.item.rating}
         </div>

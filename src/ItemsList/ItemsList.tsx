@@ -3,6 +3,7 @@ import * as React from 'react';
 import { backendUri } from '../config/config';
 import AddItem from './AddItem';
 import Item from './Item';
+import './ItemsList.css';
 import SingleItem from './SingleItem';
 
 interface ItemsListState {
@@ -27,8 +28,18 @@ export default class ItemsList extends React.Component<any, ItemsListState> {
   public render() {
     return (
       <div>
-        {this.renderItems()}
-        <AddItem onItemAdded={this.addItem} />
+        <div className='items-list__list'>
+          <div className='items-list__list__header'>
+            <div>NAME</div>
+            <div>RATING</div>
+            <div>VOTE UP</div>
+            <div>VOTE DOWN</div>
+          </div>
+          {this.renderItems()}
+        </div>
+        <div className='items-list__form'>
+          <AddItem onItemAdded={this.addItem} />
+        </div>
       </div>
     );
   }
@@ -45,6 +56,10 @@ export default class ItemsList extends React.Component<any, ItemsListState> {
   }
 
   private addItem(name: string): void {
+    if (!name) {
+      return;
+    }
+
     const options: RequestInit  = {
       body: JSON.stringify({ name }),
       headers: new Headers({ 'Content-Type': 'application/json' }),
