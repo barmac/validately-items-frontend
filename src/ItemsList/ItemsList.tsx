@@ -19,6 +19,8 @@ export default class ItemsList extends React.Component<any, ItemsListState> {
     this.state = defaultState;
     this.renderItems = this.renderItems.bind(this);
     this.addItem = this.addItem.bind(this);
+    this.voteUp = this.voteUp.bind(this);
+    this.voteDown = this.voteDown.bind(this);
   }
 
   public render() {
@@ -38,7 +40,7 @@ export default class ItemsList extends React.Component<any, ItemsListState> {
   }
 
   private renderItems() {
-    return this.state.items.map((item: Item, index: number) => <SingleItem key={index} item={item} />)
+    return this.state.items.map((item: Item, index: number) => <SingleItem key={index} item={item} onVoteUp={this.voteUp} onVoteDown={this.voteDown} />)
   }
 
   private addItem(name: string): void {
@@ -52,5 +54,37 @@ export default class ItemsList extends React.Component<any, ItemsListState> {
       .then((res: Response) => res.json())
       .then((item: Item) => this.setState({ items: [...this.state.items, item] }))
       .catch(console.error);      
+  }
+
+  private voteUp(itemId: string): void {
+    const options: RequestInit  = {
+      method: 'POST',
+    };
+
+    window.fetch(backendUri + '/items/' + itemId + '/vote-up', options)
+      .then((res: Response) => res.json())
+      .then((updatedItem: Item) => this.setState((state: ItemsListState) => {
+        const items: Item[] = state.items.map(
+          (item: Item) => item._id === updatedItem._id ? { ...item, rating: item.rating + 1 } : item
+        );
+        return { ...state, items };
+      }))
+      .catch(console.error);  
+  }
+  
+  private voteDown(itemId: string): void {
+    const options: RequestInit  = {
+      method: 'POST',
+    };
+
+    window.fetch(backendUri + '/items/' + itemId + '/vote-down', options)
+      .then((res: Response) => res.json())
+      .then((updatedItem: Item) => this.setState((state: ItemsListState) => {
+        const items: Item[] = state.items.map(
+          (item: Item) => item._id === updatedItem._id ? { ...item, rating: item.rating - 1 } : item
+        );
+        return { ...state, items };
+      }))
+      .catch(console.error);  
   }
 }
