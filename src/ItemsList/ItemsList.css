@@ -1,5 +1,5 @@
 .items-list__list__header {
   justify-content: space-evenly;
   display: grid;
-  grid-template-columns: 8fr 2fr 2fr 2fr;
+  grid-template-columns: 8fr 2fr 2fr 2fr 1fr;
 }

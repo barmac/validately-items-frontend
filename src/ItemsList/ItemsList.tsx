@@ -34,6 +34,7 @@ export default class ItemsList extends React.Component<any, ItemsListState> {
             <div>RATING</div>
             <div>VOTE UP</div>
             <div>VOTE DOWN</div>
+            <div>REMOVE</div>
           </div>
           {this.renderItems()}
         </div>

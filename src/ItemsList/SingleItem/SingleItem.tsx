@@ -51,6 +51,9 @@ export class SingleItem extends React.Component<SingleItemProps, SingleItemState
         <div>
           <i onClick={this.onVoteDown} className='fas fa-thumbs-down' />
         </div>
+        <div>
+          <i className='fas fa-trash-alt' />
+        </div>
       </div>
     );
   }
