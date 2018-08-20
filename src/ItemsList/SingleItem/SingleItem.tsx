@@ -10,6 +10,12 @@ interface SingleItemProps {
 }
 
 export class SingleItem extends React.Component<SingleItemProps, any> {
+  constructor(props: SingleItemProps) {
+    super(props);
+    this.onVoteUp = this.onVoteUp.bind(this);
+    this.onVoteDown = this.onVoteDown.bind(this);
+  }
+
   public render() {
     return (
       <div className='single-item'>
@@ -28,7 +34,7 @@ export class SingleItem extends React.Component<SingleItemProps, any> {
       </div>
     );
   }
-  
+
   private onVoteUp(): void {
     this.props.onVoteUp(this.props.item._id);
   }

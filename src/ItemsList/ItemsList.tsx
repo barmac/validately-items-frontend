@@ -53,7 +53,7 @@ export default class ItemsList extends React.Component<any, ItemsListState> {
     window.fetch(backendUri + '/items', options)
       .then((res: Response) => res.json())
       .then((item: Item) => this.setState({ items: [...this.state.items, item] }))
-      .catch(console.error);      
+      .catch(console.error);
   }
 
   private voteUp(itemId: string): void {
@@ -65,13 +65,13 @@ export default class ItemsList extends React.Component<any, ItemsListState> {
       .then((res: Response) => res.json())
       .then((updatedItem: Item) => this.setState((state: ItemsListState) => {
         const items: Item[] = state.items.map(
-          (item: Item) => item._id === updatedItem._id ? { ...item, rating: item.rating + 1 } : item
+          (item: Item) => item._id === updatedItem._id ? { ...updatedItem } : item
         );
         return { ...state, items };
       }))
-      .catch(console.error);  
+      .catch(console.error);
   }
-  
+
   private voteDown(itemId: string): void {
     const options: RequestInit  = {
       method: 'POST',
@@ -81,10 +81,10 @@ export default class ItemsList extends React.Component<any, ItemsListState> {
       .then((res: Response) => res.json())
       .then((updatedItem: Item) => this.setState((state: ItemsListState) => {
         const items: Item[] = state.items.map(
-          (item: Item) => item._id === updatedItem._id ? { ...item, rating: item.rating - 1 } : item
+          (item: Item) => item._id === updatedItem._id ? { ...updatedItem } : item
         );
         return { ...state, items };
       }))
-      .catch(console.error);  
+      .catch(console.error);
   }
 }
