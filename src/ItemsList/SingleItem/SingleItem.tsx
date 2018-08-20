@@ -8,6 +8,7 @@ interface SingleItemProps {
   updateName: (id: string, name: string) => void;
   onVoteUp: (id: string) => void;
   onVoteDown: (id: string) => void;
+  onRemove: (id: string) => void;
 }
 
 interface SingleItemState {
@@ -24,6 +25,7 @@ export class SingleItem extends React.Component<SingleItemProps, SingleItemState
     this.editName = this.editName.bind(this);
     this.onVoteUp = this.onVoteUp.bind(this);
     this.onVoteDown = this.onVoteDown.bind(this);
+    this.onRemoveItem = this.onRemoveItem.bind(this);
     this.state = {
       isEdited: false,
       name: this.props.item.name,
@@ -52,7 +54,7 @@ export class SingleItem extends React.Component<SingleItemProps, SingleItemState
           <i onClick={this.onVoteDown} className='fas fa-thumbs-down' />
         </div>
         <div>
-          <i className='fas fa-trash-alt' />
+          <i onClick={this.onRemoveItem} className='fas fa-trash-alt' />
         </div>
       </div>
     );
@@ -83,5 +85,9 @@ export class SingleItem extends React.Component<SingleItemProps, SingleItemState
 
   private onVoteDown(): void {
     this.props.onVoteDown(this.props.item._id);
+  }
+
+  private onRemoveItem(): void {
+    this.props.onRemove(this.props.item._id);
   }
 }

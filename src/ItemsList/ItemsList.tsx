@@ -23,6 +23,7 @@ export default class ItemsList extends React.Component<any, ItemsListState> {
     this.updateName = this.updateName.bind(this);
     this.voteUp = this.voteUp.bind(this);
     this.voteDown = this.voteDown.bind(this);
+    this.removeItem = this.removeItem.bind(this);
   }
 
   public render() {
@@ -46,6 +47,10 @@ export default class ItemsList extends React.Component<any, ItemsListState> {
   }
 
   public componentDidMount() {
+    this.fetchItems();
+  }
+
+  private fetchItems(): void {
     window.fetch(backendUri + '/items')
       .then((res: Response) => res.json())
       .then((items: Item[]) => this.setState({ items }))
@@ -53,7 +58,7 @@ export default class ItemsList extends React.Component<any, ItemsListState> {
   }
 
   private renderItems() {
-    return this.state.items.map((item: Item, index: number) => <SingleItem key={index} item={item} updateName={this.updateName} onVoteUp={this.voteUp} onVoteDown={this.voteDown} />)
+    return this.state.items.map((item: Item, index: number) => <SingleItem key={index} item={item} updateName={this.updateName} onVoteUp={this.voteUp} onVoteDown={this.voteDown} onRemove={this.removeItem} />)
   }
 
   private addItem(name: string): void {
@@ -117,6 +122,21 @@ export default class ItemsList extends React.Component<any, ItemsListState> {
       .then((updatedItem: Item) => this.setState((state: ItemsListState) => {
         const items: Item[] = state.items.map(
           (item: Item) => item._id === updatedItem._id ? { ...updatedItem } : item
+        );
+        return { ...state, items };
+      }))
+      .catch(console.error);
+  }
+
+  private removeItem(itemId: string): void {
+    const options: RequestInit  = {
+      method: 'DELETE',
+    };
+
+    window.fetch(backendUri + '/items/' + itemId, options)
+      .then(() => this.setState((state: ItemsListState) => {
+        const items: Item[] = state.items.filter(
+          (item: Item) => item._id !== itemId
         );
         return { ...state, items };
       }))
