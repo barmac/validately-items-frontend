@@ -9,19 +9,34 @@ interface SingleItemProps {
   onVoteDown: (id: string) => void;
 }
 
-export class SingleItem extends React.Component<SingleItemProps, any> {
+interface SingleItemState {
+  isEdited: boolean;
+  name: string;
+}
+
+export class SingleItem extends React.Component<SingleItemProps, SingleItemState> {
   constructor(props: SingleItemProps) {
     super(props);
+    this.setName = this.setName.bind(this);
+    this.editName = this.editName.bind(this);
     this.onVoteUp = this.onVoteUp.bind(this);
     this.onVoteDown = this.onVoteDown.bind(this);
+    this.state = {
+      isEdited: false,
+      name: this.props.item.name,
+    };
   }
 
   public render() {
     return (
       <div className='single-item'>
-        <div>
-          {this.props.item.name}
-        </div>
+        {
+          this.state.isEdited ?
+          <input onChange={this.setName} value={this.state.name} /> :
+          <div onClick={this.editName}>
+            {this.props.item.name}
+          </div>
+        }
         <div>
           {this.props.item.rating}
         </div>
@@ -33,6 +48,14 @@ export class SingleItem extends React.Component<SingleItemProps, any> {
         </div>
       </div>
     );
+  }
+
+  private setName(event: any): void {
+    this.setState({ name: event.target.value });
+  }
+
+  private editName(): void {
+    this.setState({ isEdited: true });
   }
 
   private onVoteUp(): void {
