@@ -19,6 +19,7 @@ export default class ItemsList extends React.Component<any, ItemsListState> {
     this.state = defaultState;
     this.renderItems = this.renderItems.bind(this);
     this.addItem = this.addItem.bind(this);
+    this.updateName = this.updateName.bind(this);
     this.voteUp = this.voteUp.bind(this);
     this.voteDown = this.voteDown.bind(this);
   }
@@ -40,7 +41,7 @@ export default class ItemsList extends React.Component<any, ItemsListState> {
   }
 
   private renderItems() {
-    return this.state.items.map((item: Item, index: number) => <SingleItem key={index} item={item} onVoteUp={this.voteUp} onVoteDown={this.voteDown} />)
+    return this.state.items.map((item: Item, index: number) => <SingleItem key={index} item={item} updateName={this.updateName} onVoteUp={this.voteUp} onVoteDown={this.voteDown} />)
   }
 
   private addItem(name: string): void {
@@ -53,6 +54,24 @@ export default class ItemsList extends React.Component<any, ItemsListState> {
     window.fetch(backendUri + '/items', options)
       .then((res: Response) => res.json())
       .then((item: Item) => this.setState({ items: [...this.state.items, item] }))
+      .catch(console.error);
+  }
+
+  private updateName(itemId: string, name: string): void {
+    const options: RequestInit  = {
+      body: JSON.stringify({ name }),
+      headers: new Headers({ 'Content-Type': 'application/json' }),
+      method: 'PUT',
+    };
+
+    window.fetch(backendUri + '/items/' + itemId, options)
+      .then((res: Response) => res.json())
+      .then((updatedItem: Item) => this.setState((state: ItemsListState) => {
+        const items: Item[] = state.items.map(
+          (item: Item) => item._id === updatedItem._id ? { ...updatedItem } : item
+        );
+        return { ...state, items };
+      }))
       .catch(console.error);
   }
 

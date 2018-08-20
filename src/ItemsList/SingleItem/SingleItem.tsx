@@ -5,6 +5,7 @@ import './SingleItem.css';
 
 interface SingleItemProps {
   item: Item;
+  updateName: (id: string, name: string) => void;
   onVoteUp: (id: string) => void;
   onVoteDown: (id: string) => void;
 }
@@ -17,6 +18,7 @@ interface SingleItemState {
 export class SingleItem extends React.Component<SingleItemProps, SingleItemState> {
   constructor(props: SingleItemProps) {
     super(props);
+    this.handleKeyPress = this.handleKeyPress.bind(this);
     this.setName = this.setName.bind(this);
     this.editName = this.editName.bind(this);
     this.onVoteUp = this.onVoteUp.bind(this);
@@ -32,7 +34,7 @@ export class SingleItem extends React.Component<SingleItemProps, SingleItemState
       <div className='single-item'>
         {
           this.state.isEdited ?
-          <input onChange={this.setName} value={this.state.name} /> :
+          <input onKeyPress={this.handleKeyPress} onChange={this.setName} value={this.state.name} /> :
           <div onClick={this.editName}>
             {this.props.item.name}
           </div>
@@ -48,6 +50,13 @@ export class SingleItem extends React.Component<SingleItemProps, SingleItemState
         </div>
       </div>
     );
+  }
+
+  private handleKeyPress(event: any): void {
+    if (event.key === 'Enter' && this.state.name) {
+      this.props.updateName(this.props.item._id, this.state.name);
+      this.setState({ isEdited: false });
+    }
   }
 
   private setName(event: any): void {
